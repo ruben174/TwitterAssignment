@@ -24,9 +24,14 @@ class HomeTableViewController: UITableViewController {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        loadMoreTweets()
+    }
+    
     @objc func loadTweet(){
         numberOfTweets = 20
-        let myUrl = "https://api.twitter.com/1.1/statuses/user_timeline.json"
+        let myUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
         let myParams = ["count": numberOfTweets]
         
         TwitterAPICaller.client?.getDictionariesRequest(url: myUrl, parameters: myParams, success: { (tweets: [NSDictionary]) in
@@ -46,7 +51,7 @@ class HomeTableViewController: UITableViewController {
     }
     
     func loadMoreTweets(){
-        let myUrl = "https://api.twitter.com/1.1/statuses/user_timeline.json"
+        let myUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
         numberOfTweets = numberOfTweets + 20
         let myParams = ["count": numberOfTweets]
         
@@ -90,6 +95,11 @@ class HomeTableViewController: UITableViewController {
         if let imageData = data{
             cell.profileImageView.image = UIImage(data: imageData)
         }
+        
+        cell.setFavorite(isFavorited: tweetArray[indexPath.row]["favorited"] as! Bool)
+        cell.tweetId = tweetArray[indexPath.row]["id"] as! Int
+        cell.setRetweeted(isRetweeted: tweetArray[indexPath.row]["retweeted"] as! Bool)
+        
         
         return cell
     }
